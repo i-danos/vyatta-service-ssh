@@ -1,3 +1,29 @@
+vyatta-service-ssh (0.25) unstable; urgency=medium
+
+  * Pin down which sshd -T lines the cipher and kex lists are read from.
+    Both were scraped with an unanchored grep:
+
+      sshd -T -f /dev/null | grep kexalgorithms | cut -d ' ' -f 2
+
+    "grep kexalgorithms" matches substrings, and current OpenSSH also emits
+    gssapikexalgorithms, so two lines came back. cut printed both, chomp only
+    stripped the trailing newline, and the embedded one went straight into
+    sshd_config -- leaving a KexAlgorithms line carrying the GSSAPI values
+    followed by an orphan line holding the real list with no keyword in front
+    of it. sshd -t rejected the file, so ExecStartPre failed and ssh.service
+    never started: the image had no remote management at all. Even had it
+    parsed, KexAlgorithms would have been set to the GSSAPI algorithms.
+
+    Both lookups now use awk anchored to the directive name and stop at the
+    first match, so exactly one value can come back:
+
+      sshd -T -f /dev/null | awk '/^kexalgorithms /{print $2; exit}'
+
+    The cipher lookup had the same unanchored shape and is fixed the same
+    way, before some future OpenSSH grows a second line matching "cipher".
+
+ -- DANOS Package Maintainers <DANOS@att.com>  Wed, 19 Aug 2026 22:00:00 +0000
+
 vyatta-service-ssh (0.24) unstable; urgency=medium
 
   [ Gavin Shearer ]

@@ -1,0 +1,11 @@
+# 构建产物。上游树不带 .gitignore，DANOS 就地构建，产物落在源码旁。
+/debian/files
+/debian/tmp/
+/debian/.debhelper/
+/debian/*.substvars
+/debian/*.debhelper.log
+/debian/*.debhelper
+/debian/vyatta-service-ssh/
+/debian/vyatta-service-ssh-v1-yang/
+/debian/vyatta-service-ssh-routing-instance-v1-yang/
+/.pc/

@@ -219,7 +219,7 @@ sub setup_max_auth_retries {
 sub setup_ciphers {
     my ( $opts, $config, $cli_path ) = @_;
     my $ciphers =
-      `/usr/sbin/sshd -T -f /dev/null | grep cipher | cut -d ' ' -f 2`;
+      `/usr/sbin/sshd -T -f /dev/null | awk '/^ciphers /{print \$2; exit}'`;
     chomp $ciphers;
     my @cfg_ciphers =
       $config->returnValues("${cli_path}service ssh permit cipher");
@@ -232,7 +232,7 @@ sub setup_ciphers {
 sub setup_kexalgorithms {
     my ( $opts, $config, $cli_path ) = @_;
     my $algs =
-      `/usr/sbin/sshd -T -f /dev/null | grep kexalgorithms | cut -d ' ' -f 2`;
+      `/usr/sbin/sshd -T -f /dev/null | awk '/^kexalgorithms /{print \$2; exit}'`;
     chomp $algs;
     my @splitalgs = split( ',', $algs );
 
