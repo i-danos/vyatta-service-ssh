@@ -1,4 +1,5 @@
-# 构建产物。上游树不带 .gitignore，DANOS 就地构建，产物落在源码旁。
+# Build output. The upstream tree carries no .gitignore, and DANOS builds in
+# place, so the artefacts land beside the source.
 /debian/files
 /debian/tmp/
 /debian/.debhelper/
